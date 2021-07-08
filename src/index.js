@@ -19,7 +19,6 @@ function verifyIfExistsAccountCPF(req, res, next){
         return res.status(400).json({error: "Customer not found"})
     }
 
-    //adicionando um element no req
     req.customer = customer
 
     return next()
@@ -38,7 +37,6 @@ function getBalance(statement){
 app.post('/account', (req, res) => {
     const {cpf, name} = req.body;
 
-    //Verificar se ja existe um cliente com esse cpf
     const customerAlreadyExists = customers.some(
         (customer) => customer.cpf === cpf
     )
@@ -55,7 +53,6 @@ app.post('/account', (req, res) => {
         statement: []
     })
 
-    //201 - quando um dado é criado
     return res.status(201).send();
 
 
