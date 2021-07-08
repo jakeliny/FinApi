@@ -10,12 +10,21 @@ const customers = []
 
 app.post('/account', (req, res) => {
     const {cpf, name} = req.body;
-    const id = uuidv4();
+
+    //Verificar se ja existe um cliente com esse cpf
+    const customerAlreadyExists = customers.some(
+        (customer) => customer.cpf === cpf
+    )
+
+    if(customerAlreadyExists){
+        return res.status(400).json({error: "Customer already exists!"})
+    }
+
 
     customers.push({
         cpf,
         name,
-        id,
+        id: uuidv4(),
         statement: []
     })
 
@@ -23,6 +32,18 @@ app.post('/account', (req, res) => {
     return res.status(201).send();
 
 
+})
+
+app.get('/statement/:cpf', (req, res) => {
+    const {cpf} = req.params
+
+    const customer = customers.find(customer => customer.cpf === cpf)
+
+    if(!customer){
+        return res.status(400).json({error: "Customer not found"})
+    }
+
+    return res.json(customer.statement)
 })
 
 app.listen(3000)
